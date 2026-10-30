@@ -1,0 +1,25 @@
+local Players = game:GetService("Players")
+
+local Credits = {
+	["Void"] = {Description = "Lead Developer // Scripting & UI Designing", UserID = 970427078},
+	["Sterfan6"] = {Description = "Developer // Map & Design", UserID = 3713686682},
+}
+
+for n, v in pairs(Credits) do
+	local clone = script.Product:Clone()
+	clone.Parent = script.Parent.Holder:WaitForChild("Credits"):WaitForChild("ScrollingFrame")
+
+	clone.Title.Text = n
+	clone.Desc.Text = v.Description
+
+	-- Get the user's profile picture
+	local thumbnail, isReady = Players:GetUserThumbnailAsync(
+		v.UserID,
+		Enum.ThumbnailType.HeadShot,
+		Enum.ThumbnailSize.Size420x420
+	)
+
+	if isReady then
+		clone.ImageLabel.Image = thumbnail
+	end
+end
