@@ -1,0 +1,120 @@
+local Teams = {
+	["Patient"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as Patient, attend to Containment Asset Testing, join experiments and cause panic.",
+		TeamBackground = "// NEUTRAL",
+		TeamBgColor = Color3.fromRGB(74, 35, 0),
+		TeamRequirementLVL = 0,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild('Patient')
+	},
+	["Security Staff"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as Security Staff, ensure that there are no raidings or class d escaping.",
+		TeamBackground = "// STAFF",
+		TeamBgColor = Color3.fromRGB(79, 79, 79),
+		TeamRequirementLVL = 0,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Security Staff")
+	},
+	["Mobile Task Force"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as mobile task force, respond to breaches and heavy duty reports. Unlock this team by getting LV2",
+		TeamBackground = "// MTF",
+		TeamBgColor = Color3.fromRGB(42, 50, 83),
+		TeamRequirementLVL = 2,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Mobile Task Force")
+	},
+	["Medical Staff"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as medical staff, enroute to medical requestings issued within radio. Unlock this team by getting LV1",
+		TeamBackground = "// MED",
+		TeamBgColor = Color3.fromRGB(16, 57, 52),
+		TeamRequirementLVL = 1,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Medical Corporation")
+	},
+	["Insurgents"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as Insurgent, cause havoc and panic to the facility, breach as many containment assets. Unlock this team by getting LV3",
+		TeamBackground = "// HOSTILE",
+		TeamBgColor = Color3.fromRGB(59, 19, 19),
+		TeamRequirementLVL = 3,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Insurgents")
+	},
+	["Biohazard Containment Unit"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as BCU Unit, respond to biohazardous containment assets. You are the last resort of the containment asset recontamination. Unlock this team by getting LV5",
+		TeamBackground = "// MTF",
+		TeamBgColor = Color3.fromRGB(42, 50, 83),
+		TeamRequirementLVL = 5,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Biohazard Containment Unit")
+	},
+	["O5 Command"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as O5 Command, you are the highest ranking personnel of this facility. Unlock this team by getting LV5",
+		TeamBackground = "// COMMAND",
+		TeamBgColor = Color3.fromRGB(48, 10, 62),
+		TeamRequirementLVL = 5,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("O5 Command")
+	},
+	["Site Director"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as Site Director, you are the second highest ranking personnel of this facility. Unlock this team by getting LV5",
+		TeamBackground = "// COMMAND",
+		TeamBgColor = Color3.fromRGB(52, 12, 67),
+		TeamRequirementLVL = 5,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Site Director")
+	},
+	["Storm Laboratory Staff"] = {
+		Gamepass = false,
+		GamepassID = nil,
+		Description = "Deploy as Laboratory Staff, you conduct the experiments here. Unlock this team by getting LV5",
+		TeamBackground = "// LAB",
+		TeamBgColor = Color3.fromRGB(98, 99, 20),
+		TeamRequirementLVL = 5,
+		TeamImage = "",
+		Team = game:GetService('Teams'):WaitForChild("Storm Laboratory")
+	},
+}
+
+local Clearance = game:GetService('Players').LocalPlayer:WaitForChild('ClearanceData').Level
+
+for n,v in pairs(Teams) do
+	local Clone = nil
+	
+	if Clearance.Value >= v.TeamRequirementLVL then
+		Clone = script.Product:Clone()
+	else
+		Clone = script.ProductBlocked:Clone()
+	end
+	
+	Clone.Title.Text = n
+	Clone.Desc.Text = v.Description
+	Clone.Detail.Text = v.TeamBackground
+	Clone.Detail.TextColor3 = v.TeamBgColor
+	Clone.Parent = script.Parent.Holder.Deploy.ScrollingFrame
+	Clone.ImageLabel.Image = v.TeamImage
+	
+	Clone.Become.TextButton.Activated:Connect(function()
+		game:GetService("ReplicatedStorage"):FindFirstChild("SCPFMenuRemotes"):FindFirstChild("ChangeTeam"):FireServer(v.Team)
+		workspace.CurrentCamera.CameraSubject = game:GetService('Players').LocalPlayer.Character:WaitForChild('Humanoid')
+		game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild('Client'):WaitForChild('CameraManipulated').Value = false
+		workspace.CurrentCamera.CameraType = "Custom"
+		script.Parent.Enabled = false
+		game:GetService('StarterGui'):SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
+	end)
+end
