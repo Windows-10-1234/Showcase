@@ -1,0 +1,36 @@
+local Products = {
+	["Clearance 5"] = {
+		ProductDescription = "Give's you each team in game, grants you access to the control room & administration wing. Skip's immidiately to L5 within game.",
+		ProductImage = "85230491019541",
+		ProductPrice = 500,
+		ProductID = 1663156546
+	}
+}
+
+for n,v in pairs(Products) do
+	local clone = script.Product:Clone()
+	clone.Parent = script.Parent.Holder:WaitForChild('Store'):WaitForChild('ScrollingFrame')
+	clone.Title.Text = n
+	clone.Desc.Text = v.ProductDescription
+	clone.Price.TextLabel.Text = tostring(v.ProductPrice)
+	clone.ImageLabel.Image = "rbxassetid://"..v.ProductImage
+	
+	if v.ProductID and game:GetService('MarketplaceService'):UserOwnsGamePassAsync(game:GetService('Players').LocalPlayer.UserId, v.ProductID) then
+		clone.Price.TextLabel.Text = "Owned"
+	end
+	
+	clone.TextButton.Activated:Connect(function()
+		if game:GetService('MarketplaceService'):UserOwnsGamePassAsync(game:GetService('Players').LocalPlayer.UserId, v.ProductID) then
+			game:GetService('StarterGui'):SetCore("SendNotification", {
+				Title = "[BLACK SITE]: Storm",
+				Text = "Already owned this gamepass!"
+			})
+		else
+			game:GetService('MarketplaceService'):PromptGamePassPurchase(game:GetService('Players').LocalPlayer, v.ProductID)
+			game:GetService('StarterGui'):SetCore("SendNotification", {
+				Title = "[BLACK SITE]: Storm",
+				Text = "Rejoin game if purchased!"
+			})
+		end
+	end)
+end
